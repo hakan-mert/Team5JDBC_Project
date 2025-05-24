@@ -71,14 +71,14 @@ public class DatabaseHelper {
         st = con.createStatement();
         rs = st.executeQuery(query);
         ResultSetMetaData metaData = rs.getMetaData();
-        // Print result
+
         System.out.printf("%-10s %-16s%n", "Gender", "Average Salary");
         while (rs.next()) {
             System.out.printf("%-10s %-16s%n", rs.getString("gender"), rs.getString("avg_salary"));
         }
     }
 
-    // Helper method to execute query and print results
+
     protected void executeEmployeeQueryUnique(String query) throws SQLException {
         st = con.createStatement();
         rs = st.executeQuery(query);
@@ -88,7 +88,7 @@ public class DatabaseHelper {
             System.out.printf("%-16s", metaData.getColumnName(i));
         }
         System.out.println();
-        // Print result
+
         String previousName = "";
         int rowCount = 0;
         while (rs.next() && rowCount < 100) {  // Limit to 100 records
@@ -104,8 +104,8 @@ public class DatabaseHelper {
         }
     }
 
-    // Helper method to execute query and print results
-    protected void executeEmployeeQuery(String query) throws SQLException {
+
+    protected static void executeEmployeeQuery(String query) throws SQLException {
         st = con.createStatement();
         rs = st.executeQuery(query);
         ResultSetMetaData metaData = rs.getMetaData();
@@ -191,7 +191,7 @@ public class DatabaseHelper {
         }
     }
 
-    // Metod to execute a query and print the results
+
     protected void executeQueryAndPrintResults(String query) {
         try (Statement st = con.createStatement();
              ResultSet rs = st.executeQuery(query)) {
@@ -199,13 +199,13 @@ public class DatabaseHelper {
             ResultSetMetaData metaData = rs.getMetaData();
             int columnCount = metaData.getColumnCount();
 
-            // Print column headers
+
             for (int i = 1; i <= columnCount; i++) {
                 System.out.printf("%-16s", metaData.getColumnName(i));
             }
             System.out.println();
 
-            // Print query results
+
             while (rs.next()) {
                 for (int i = 1; i <= columnCount; i++) {
                     System.out.printf("%-16s", rs.getString(i));
@@ -237,8 +237,8 @@ public class DatabaseHelper {
              ResultSet rs = st.executeQuery(query)) {
 
             while (rs.next()) {
-                String deptNo = rs.getString(1); // dept_no sütununu al
-                int employeeCount = rs.getInt(2); // employee_count sütununu al
+                String deptNo = rs.getString(1);
+                int employeeCount = rs.getInt(2);
                 result.append(String.format("Department No: %s, Employee Count: %d%n", deptNo, employeeCount));
             }
         }
