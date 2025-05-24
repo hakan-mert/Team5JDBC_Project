@@ -1,6 +1,7 @@
 package JDBC;
 import org.testng.annotations.Test;
 import java.sql.*;
+import java.util.ArrayList;
 
 public class Queries extends DatabaseHelper{
 
@@ -33,15 +34,15 @@ public class Queries extends DatabaseHelper{
    public void listEmployeesInSalesDepartmentWithHighSalary() {
 
        String query =
-               "SELECT e.*, s.salary " +
-                       "FROM employees e " +
-                       "JOIN dept_emp de ON e.emp_no = de.emp_no " +
-                       "JOIN departments d ON de.dept_no = d.dept_no " +
-                       "JOIN salaries s ON e.emp_no = s.emp_no " +
-                       "WHERE d.dept_name = 'Sales' " +
-                       "AND s.salary > 70000 " +
-                       "AND s.to_date = '9999-01-01' " +
-                       "LIMIT 100;";
+               "select  e.*, s.salary " +
+                       "from employees e " +
+                       "join dept_emp de on e.emp_no = de.emp_no " +
+                       "join departments d on de.dept_no = d.dept_no " +
+                       "join salaries s on e.emp_no = s.emp_no " +
+                       "where d.dept_name = 'Sales' " +
+                       "and s.salary > 70000 " +
+                       "and s.to_date = '9999-01-01' " +
+                       "limit 100;";
 
        try {
            System.out.println("Employees in Sales Department with Salary > $70,000:");
@@ -51,7 +52,7 @@ public class Queries extends DatabaseHelper{
        }
    }
 
-
+    
 
 
   // 7. This query retrieves employees who have salaries between 50000 and 100000.
@@ -71,12 +72,12 @@ public class Queries extends DatabaseHelper{
   public void findEmployeeWithHighestSalary() {
 
       String query =
-              "SELECT e.*, s.salary " +
-                      "FROM employees e " +
-                      "JOIN salaries s ON e.emp_no = s.emp_no " +
-                      "WHERE s.to_date = '9999-01-01' " +
-                      "ORDER BY s.salary DESC " +
-                      "LIMIT 1;";
+              "select e.*, s.salary " +
+                      "from employees e " +
+                      "join salaries s ON e.emp_no = s.emp_no " +
+                      "where s.to_date = '9999-01-01' " +
+                      "order BY s.salary desc " +
+                      "limit 1;";
 
       try {
           System.out.println("Employee with the Highest Salary:");
