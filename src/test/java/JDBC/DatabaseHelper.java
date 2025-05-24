@@ -12,6 +12,8 @@ public class DatabaseHelper {
     private static final String dbSchema = "jdbc:mysql://demo.mersys.io:33906/employees";
     private static final String username = "student";
     private static final String password = "DEkzTd3#pzPm";
+    public static Statement sorguEkrani;
+
 
     @BeforeClass
     public static void setUp() {
@@ -62,4 +64,28 @@ public class DatabaseHelper {
             }
         }
     }
+
+    public static ArrayList<ArrayList<String>> getListData(String sql) {
+        ArrayList<ArrayList<String>> dataList = new ArrayList<>();
+
+        try (Statement st = con.createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
+
+            ResultSetMetaData rsmd = rs.getMetaData();
+
+            while (rs.next()) {
+                ArrayList<String> rowList = new ArrayList<>();
+                for (int i = 1; i <= rsmd.getColumnCount(); i++) {
+                    rowList.add(rs.getString(i));
+                }
+                dataList.add(rowList);
+            }
+
+        } catch (Exception ex) {
+            System.out.println("ex.getMessage() = " + ex.getMessage());
+        }
+
+        return dataList;
+    }
+
 }
