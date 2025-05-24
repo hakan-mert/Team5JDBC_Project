@@ -1,13 +1,8 @@
 package JDBC;
-
 import org.testng.annotations.Test;
-
 import java.sql.*;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
-
-public class Queries {
+public class Queries extends DatabaseHelper{
 
 
    // 1. List all employees in department D001.
@@ -31,14 +26,16 @@ public class Queries {
                        "JOIN dept_emp de ON e.emp_no = de.emp_no " +
                        "JOIN departments d ON de.dept_no = d.dept_no " +
                        "JOIN salaries s ON e.emp_no = s.emp_no " +
-                       "WHERE d.dept_name = 'Sales' AND s.salary > 70000 " +
-                       "LIMIT 100;";  // Limit to 100 records
+                       "WHERE d.dept_name = 'Sales' " +
+                       "AND s.salary > 70000 " +
+                       "AND s.to_date = '9999-01-01' " +
+                       "LIMIT 100;";
 
        try {
            System.out.println("Employees in Sales Department with Salary > $70,000:");
-           DatabaseHelper.executeEmployeeQuery(query);
+           executeEmployeeQuery(query);
        } catch (SQLException e) {
-           e.printStackTrace();
+           System.err.println("SQL Error: " + e.getMessage());
        }
    }
 
@@ -58,7 +55,24 @@ public class Queries {
   // - Maaş numarası '10102' olan çalışanın maaş artışlarını bul ('to_date' sütununu kullanarak).
   // 12. Find the employee with the highest salary
   // - En yüksek maaşa sahip çalışanı bul.
+  @Test(groups = {"SalaryQueries"})
+  public void findEmployeeWithHighestSalary() {
 
+      String query =
+              "SELECT e.*, s.salary " +
+                      "FROM employees e " +
+                      "JOIN salaries s ON e.emp_no = s.emp_no " +
+                      "WHERE s.to_date = '9999-01-01' " +
+                      "ORDER BY s.salary DESC " +
+                      "LIMIT 1;";
+
+      try {
+          System.out.println("Employee with the Highest Salary:");
+          executeEmployeeQuery(query);
+      } catch (SQLException e) {
+          System.err.println("SQL Error: " + e.getMessage());
+      }
+  }
     
   // 13. Find the latest salaries for each employee
   // - Her çalışanın en son maaşlarını bul.
