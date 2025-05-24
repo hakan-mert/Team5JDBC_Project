@@ -11,9 +11,9 @@ public class DatabaseHelper {
     protected static Connection con;
     protected static Statement st;
     protected static ResultSet rs;
-    private static final String hostURL = "demo.mersys.io";
+    private static final String hostURL = "jdbc:mysql://demo.mersys.io:33906"; // güncelleme yapıldı
     private static final String dbSchema = hostURL + "/employees";
-    private static final String username = "33906";
+    private static final String username = "student";
     private static final String password = "DEkzTd3#pzPm";
 
     @BeforeClass
@@ -49,6 +49,8 @@ public class DatabaseHelper {
         List<List<String>> dataList = new ArrayList<>();
 
         try {
+            con = DriverManager.getConnection(dbSchema, username, password); // silinecek
+            st = con.createStatement(); // silinecek
             ResultSet rs = st.executeQuery(sql);
             ResultSetMetaData rsmd = rs.getMetaData();
 
@@ -66,6 +68,13 @@ public class DatabaseHelper {
 
         return dataList;
     }
+
+    public static ResultSet getRusultSet() throws SQLException {
+        con = DriverManager.getConnection(dbSchema, username, password); // silinecek
+        st = con.createStatement(); // silinecek
+        return rs;
+    }
+
 
     protected static void executeAverageSalaryQuery(String query) throws SQLException {
         st = con.createStatement();
