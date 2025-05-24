@@ -11,6 +11,18 @@ public class Queries extends DatabaseHelper{
   // - 'İnsan Kaynakları' departmanındaki tüm çalışanları listele.
   // 3. Calculate the average salary of all employees
   // - Tüm çalışanların ortalama maaşını hesapla.
+    @Test
+    public void Query3(){
+        String query3=" SELECT emp_no, AVG(salary) FROM employees.salaries group by emp_no";
+        try {
+            System.out.println("Average salary of all employees:");
+            executeEmployeeQuery(query3);
+        } catch (SQLException e) {
+            System.err.println("SQL Error: " + e.getMessage());
+        }
+    }
+
+
   // 4. Calculate the average salary of all employees with gender "M"
   // - "Erkek" cinsiyetindeki tüm çalışanların ortalama maaşını hesapla.
   // 5. Calculate the average salary of all employees with gender "F"
@@ -110,7 +122,23 @@ public class Queries extends DatabaseHelper{
   // - 1985-01-01 ile 1989-12-31 tarihleri arasında işe alınan Satış departmanındaki tüm çalışanların
   // adlarını, soyadlarını, işe alınma tarihlerini ve maaşlarını, maaşa göre azalan şekilde sıralı olarak
   // listele.
-  // 21.
+  @Test
+  public void Query20(){
+      String query20=" select e.emp_no,e.first_name, e.last_name, e. hire_date, s.salary, d.dept_name\n" +
+              " from employees e inner join salaries s on e.emp_no=s.emp_no\n" +
+              " join dept_emp de on s.emp_no=de.emp_no inner join departments d on de.dept_no=d.dept_no where d.dept_name='Sales'and\n" +
+              " e.hire_date  BETWEEN '1985-01-01' AND '1989-12-31' ORDER BY s.salary desc;";
+      try {
+          System.out.println("List of those were hired between January 01, 1985 and December 31, 1989:");
+          executeEmployeeQuery(query20);
+      } catch (SQLException e) {
+          System.err.println("SQL Error: " + e.getMessage());
+      }
+  }
+
+
+
+    // 21.
   // -- a: Find the count of male employees (179973)
   // -- Erkek çalışanların sayısını bulun (179973)
   // -- b: Determine the count of female employees (120050)
