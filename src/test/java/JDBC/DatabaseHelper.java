@@ -5,10 +5,10 @@ import org.testng.annotations.BeforeClass;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;
 
 public class DatabaseHelper {
     protected static Connection con;
+
     private static final String dbSchema = "jdbc:mysql://demo.mersys.io:33906/employees";
     private static final String username = "student";
     private static final String password = "DEkzTd3#pzPm";
@@ -37,6 +37,9 @@ public class DatabaseHelper {
             e.printStackTrace();
         }
     }
+
+
+
     protected static void executeEmployeeQuery(String query) throws SQLException {
         try (Statement st = con.createStatement();
              ResultSet rs = st.executeQuery(query)) {
@@ -44,14 +47,14 @@ public class DatabaseHelper {
             ResultSetMetaData metaData = rs.getMetaData();
             int columnCount = metaData.getColumnCount();
 
-
+            // Kolon başlıkları
             for (int i = 1; i <= columnCount; i++) {
                 System.out.printf("%-20s", metaData.getColumnName(i));
             }
             System.out.println();
-            System.out.println("=".repeat(20 * columnCount)); // Divider
+            System.out.println("=".repeat(20 * columnCount));
 
-
+            // Satırlar
             int rowCount = 0;
             while (rs.next() && rowCount < 100) {
                 for (int i = 1; i <= columnCount; i++) {
