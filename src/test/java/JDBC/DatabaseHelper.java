@@ -30,14 +30,13 @@ public class DatabaseHelper {
     public static void tearDown() {
         try {
             if (con != null && !con.isClosed()) {
-                System.out.println("::: Closing Database Connection...");
+                System.out.println("Closing Database Connection");
                 con.close();
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
-
     protected static void executeEmployeeQuery(String query) throws SQLException {
         try (Statement st = con.createStatement();
              ResultSet rs = st.executeQuery(query)) {
@@ -45,14 +44,14 @@ public class DatabaseHelper {
             ResultSetMetaData metaData = rs.getMetaData();
             int columnCount = metaData.getColumnCount();
 
-            // Print column headers
+
             for (int i = 1; i <= columnCount; i++) {
                 System.out.printf("%-20s", metaData.getColumnName(i));
             }
             System.out.println();
             System.out.println("=".repeat(20 * columnCount)); // Divider
 
-            // Print rows
+
             int rowCount = 0;
             while (rs.next() && rowCount < 100) {
                 for (int i = 1; i <= columnCount; i++) {
@@ -63,5 +62,4 @@ public class DatabaseHelper {
             }
         }
     }
-
 }
