@@ -1,7 +1,6 @@
 package JDBC;
 import org.testng.annotations.Test;
 import java.sql.*;
-import java.util.ArrayList;
 
 public class Queries extends DatabaseHelper{
 
@@ -34,7 +33,7 @@ public class Queries extends DatabaseHelper{
    public void listEmployeesInSalesDepartmentWithHighSalary() {
 
        String query =
-               "select  e.*, s.salary " +
+               "select e.*, s.salary " +
                        "from employees e " +
                        "join dept_emp de on e.emp_no = de.emp_no " +
                        "join departments d on de.dept_no = d.dept_no " +
@@ -52,10 +51,27 @@ public class Queries extends DatabaseHelper{
        }
    }
 
-    
+
 
 
   // 7. This query retrieves employees who have salaries between 50000 and 100000.
+    @Test
+    public void Query7(){
+        String query =
+                "select e.*, s.salary " +
+                        "from employees e " +
+                        "join salaries s on e.emp_no = s.emp_no " +
+                        "where s.salary between 50000 and 100000 " +
+                        "and s.to_date = '9999-01-01' " +
+                        "limit 100;";
+
+        try {
+            System.out.println("Employees with Salary between $50,000 and $100,000:");
+            executeEmployeeQuery(query);
+        } catch (SQLException e) {
+            System.err.println("SQL Error: " + e.getMessage());
+        }
+    }
   // - Bu sorgu, maaşı 50.000 ile 100.000 arasında olan çalışanları getirir.
   // 8. Calculate the average salary for each department (by department number or department name)
   // - Her departmanın ortalama maaşını hesapla (departman numarasına veya departman adına göre).
@@ -74,9 +90,9 @@ public class Queries extends DatabaseHelper{
       String query =
               "select e.*, s.salary " +
                       "from employees e " +
-                      "join salaries s ON e.emp_no = s.emp_no " +
+                      "join salaries s on e.emp_no = s.emp_no " +
                       "where s.to_date = '9999-01-01' " +
-                      "order BY s.salary desc " +
+                      "order by s.salary desc " +
                       "limit 1;";
 
       try {
@@ -86,7 +102,6 @@ public class Queries extends DatabaseHelper{
           System.err.println("SQL Error: " + e.getMessage());
       }
   }
-    
   // 13. Find the latest salaries for each employee
   // - Her çalışanın en son maaşlarını bul.
   // 14. List the first name, last name, and highest salary of employees in the "Sales" department.
@@ -118,6 +133,21 @@ public class Queries extends DatabaseHelper{
   // December 31, 1989, sorted by hire date.
   // - 1985-01-01 ile 1989-12-31 tarihleri arasında işe alınan tüm çalışanların adlarını, soyadlarını ve işe
   // alınma tarihlerini işe alınma tarihine göre sıralı olarak listele.
+    @Test
+    public void Query19(){
+        String query =
+                "select first_name, last_name, hire_date " +
+                        "from employees " +
+                        "where hire_date between '1985-01-01' and '1989-12-31' " +
+                        "order by hire_date asc;";
+
+        try {
+            System.out.println("Employees hired between 1985 and 1989:");
+            executeEmployeeQuery(query);
+        } catch (SQLException e) {
+            System.err.println("SQL Error: " + e.getMessage());
+        }
+    }
   // 20. List the names, last names, hire dates, and salaries of all employees in the Sales department who
   // were hired between January 01, 1985 and December 31, 1989, sorted by salary in descending order.
   // - 1985-01-01 ile 1989-12-31 tarihleri arasında işe alınan Satış departmanındaki tüm çalışanların
