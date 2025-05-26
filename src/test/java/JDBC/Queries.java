@@ -12,7 +12,7 @@ public class Queries extends DatabaseHelper {
     // - D001 departmanındaki tüm çalışanları listele.
     // 2. List all employees in 'Human Resources' department.
     // - 'İnsan Kaynakları' departmanındaki tüm çalışanları listele.
-    @Test(groups = {"EmployeeQueries", "DepartmentQueries"})
+    @Test(groups = {"EmployeeQueries"})
     public void listEmployeesInHumanResources() {
         String query =
                 "SELECT e.*, d.dept_name " +
@@ -230,7 +230,7 @@ public class Queries extends DatabaseHelper {
     // January 01, 1990.
     // - 1990-01-01 tarihinden önce işe alınan tüm çalışanların adlarını, soyadlarını ve işe alınma
     // tarihlerini alfabetik sırayla listele.
-    @Test(groups = {"EmployeeQueries", "DateQueries"})
+    @Test(groups = {"EmployeeQueries"})
     public void listEmployeesHiredBefore1990() {
         String query =
                 "SELECT first_name, last_name, hire_date " +
