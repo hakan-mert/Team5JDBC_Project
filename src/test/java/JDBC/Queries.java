@@ -12,6 +12,24 @@ public class Queries extends DatabaseHelper {
     // - D001 departmanındaki tüm çalışanları listele.
     // 2. List all employees in 'Human Resources' department.
     // - 'İnsan Kaynakları' departmanındaki tüm çalışanları listele.
+    @Test(groups = {"EmployeeQueries"})
+    public void listEmployeesInHumanResources() {
+        String query =
+                "SELECT e.*, d.dept_name " +
+                        "FROM employees e " +
+                        "JOIN dept_emp de ON e.emp_no = de.emp_no " +
+                        "JOIN departments d ON de.dept_no = d.dept_no " +
+                        "WHERE d.dept_name = 'Human Resources' " +
+                        "LIMIT 100;";
+
+        try {
+            System.out.println("Employees in Human Resources Department:");
+            executeEmployeeQuery(query);
+        } catch (SQLException e) {
+            System.err.println("SQL Error: " + e.getMessage());
+        }
+    }
+
     // 3. Calculate the average salary of all employees
     // - Tüm çalışanların ortalama maaşını hesapla.
     @Test
@@ -212,6 +230,22 @@ public class Queries extends DatabaseHelper {
     // January 01, 1990.
     // - 1990-01-01 tarihinden önce işe alınan tüm çalışanların adlarını, soyadlarını ve işe alınma
     // tarihlerini alfabetik sırayla listele.
+    @Test(groups = {"EmployeeQueries"})
+    public void listEmployeesHiredBefore1990() {
+        String query =
+                "SELECT first_name, last_name, hire_date " +
+                        "FROM employees " +
+                        "WHERE hire_date < '1990-01-01' " +
+                        "ORDER BY hire_date ASC " +
+                        "LIMIT 100;";
+
+        try {
+            System.out.println("Employees hired before 1990:");
+            executeEmployeeQuery(query);
+        } catch (SQLException e) {
+            System.err.println("SQL Error: " + e.getMessage());
+        }
+    }
     // 19. List the names, last names, hire dates of all employees hired between January 01, 1985 and
     // December 31, 1989, sorted by hire date.
     // - 1985-01-01 ile 1989-12-31 tarihleri arasında işe alınan tüm çalışanların adlarını, soyadlarını ve işe
