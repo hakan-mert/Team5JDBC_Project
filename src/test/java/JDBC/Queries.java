@@ -4,6 +4,7 @@ import org.testng.annotations.Test;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Queries extends DatabaseHelper {
 
@@ -184,6 +185,37 @@ public class Queries extends DatabaseHelper {
     // 14. List the first name, last name, and highest salary of employees in the "Sales" department.
     // Order the list by highest salary descending and only show the employee with the highest salary.
     // - "Satış" departmanındaki çalışanların adını, soyadını ve en yüksek maaşını listele.
+
+    @Test
+    public void TC14()throws SQLException{
+        String query=
+                "select e.first_name, e.last_name, MAX(s.salary) " +
+                        "from employees e"+
+
+                        "JOIN\n dept_emp de ON e.emp_no = de.emp_no\n"+
+                        "JOIN\n departments d ON de.dept_no = d.dept_no \n"+
+                        "JOIN\n salaries s ON e.emp_no = s.emp_no\n"+
+                        "WHERE\n d.dept_name = 'Sales'\n"+
+                        "GROUP BY e.emp_no"+
+                        "ORDER BY max(s.salary) DESC"+
+                        "LIMIT 1;";
+        try {
+            System.out.println("Highest paid employee in Sales:");
+            ArrayList<ArrayList<String>> result = getListData(query);
+
+            for (ArrayList<String> row : result) {
+                System.out.println("Name: " + row.get(0) + " " + row.get(1));
+                System.out.println("Max Salary: " + row.get(2));
+            }
+
+        } catch (Exception e) {
+            System.err.println("SQL Error: " + e.getMessage());
+        }
+
+
+
+
+    }
     // Listeyi en yüksek maaşa göre azalan şekilde sırala ve sadece en yüksek maaşa sahip çalışanı
     // göster.
     // 15. Find the Employee with the Highest Salary Average in the Research Department
