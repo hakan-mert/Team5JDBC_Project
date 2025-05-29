@@ -2,6 +2,7 @@ package JDBC;
 
 import org.testng.annotations.Test;
 
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +12,20 @@ public class Queries extends DatabaseHelper {
 
     // 1. List all employees in department D001.
     // - D001 departmanındaki tüm çalışanları listele.
+    @Test
+    public void Task1() throws SQLException {
+
+        String query1 = "select * from employees";
+        ArrayList<ArrayList<String>> employees = getListData(query1);
+
+        for (int i = 0; i < employees.size(); i++) {
+
+            for (int j = 0; j < employees.get(i).size(); j++) {
+                System.out.print(employees.get(i).get(j).toString() + " ");
+            }
+            System.out.println();
+        }
+    }
     // 2. List all employees in 'Human Resources' department.
     // - 'İnsan Kaynakları' departmanındaki tüm çalışanları listele.
     @Test(groups = {"EmployeeQueries"})
@@ -47,8 +62,43 @@ public class Queries extends DatabaseHelper {
 
     // 4. Calculate the average salary of all employees with gender "M"
     // - "Erkek" cinsiyetindeki tüm çalışanların ortalama maaşını hesapla.
+    @Test
+    public void Task4() throws SQLException {
+        String sorgu2 = "select count(gender) as toplam_erkek_personel,sum(salary)/count(salary) as ortalama_maas from (select gender as gender, salary as salary from employees left join salaries on employees.emp_no = salaries.emp_no where gender like 'M') as ort";
+
+        ArrayList<ArrayList<String>> line = getListData(sorgu2);
+
+        /* rs null döndürğü için şimdilik yorum olarak bıraktım sonra bakılabilir veya silinebilir
+        ResultSetMetaData rsmd = rs.getMetaData();
+        int columnNumber = rsmd.getColumnCount();
+        System.out.println("kolonSayisi = " + columnNumber);
+        for (int i = 1; i <= columnNumber; i++) {
+            System.out.println(rsmd.getColumnName(i)+" "+ rsmd.getColumnTypeName(i));
+        }
+         */
+
+        for (int i = 0; i < line.size(); i++) {
+            for (int j = 0; j < line.get(i).size(); j++) {
+                System.out.print(line.get(i).get(j).toString() + " ");
+            }
+            System.out.println();
+        }
+    }
     // 5. Calculate the average salary of all employees with gender "F"
     // - "Kadın" cinsiyetindeki tüm çalışanların ortalama maaşını hesapla.
+    @Test
+    public void Task5() throws SQLException {
+        String sorgu2 = "select count(gender) as toplam_kadin_personel,sum(salary)/count(salary) as ortalama_maas from (select gender as gender, salary as salary from employees left join salaries on employees.emp_no = salaries.emp_no where gender like 'F') as ort";
+
+        List<List<String>> line = getListData(sorgu2);
+
+        for (int i = 0; i < line.size(); i++) {
+            for (int j = 0; j < line.get(i).size(); j++) {
+                System.out.print(line.get(i).get(j).toString() + " ");
+            }
+            System.out.println();
+        }
+    }
     // 6. List all employees in the "Sales" department with a salary greater than 70,000.
     // - Maaşı 70.000'den yüksek olan "Satış" departmanındaki tüm çalışanları listele
     @Test(groups = {"EmployeeQueries", "SalaryQueries"})
@@ -156,6 +206,20 @@ public class Queries extends DatabaseHelper {
 
     // 10. Find all salary changes for employee with emp. no '10102'
     // - '10102' iş numarasına sahip çalışanın tüm maaş değişikliklerini bul.
+    @Test
+    public void Task10() throws SQLException {
+
+        String query1 = "select emp_no,salary from salaries where emp_no like '10102'";
+        ArrayList<ArrayList<String>> employee10102 = getListData(query1);
+
+        for (int i = 0; i < employee10102.size(); i++) {
+
+            for (int j = 0; j < employee10102.get(i).size(); j++) {
+                System.out.print(employee10102.get(i).get(j).toString() + " ");
+            }
+            System.out.println();
+        }
+    }
     // 11. Find the salary increases for employee with employee number '10102' (using the to_date column
     // in salaries)
 
