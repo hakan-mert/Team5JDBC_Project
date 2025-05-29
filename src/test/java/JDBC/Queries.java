@@ -158,6 +158,29 @@ public class Queries extends DatabaseHelper {
     // - '10102' iş numarasına sahip çalışanın tüm maaş değişikliklerini bul.
     // 11. Find the salary increases for employee with employee number '10102' (using the to_date column
     // in salaries)
+
+
+    @Test
+
+    public void TC11() throws SQLException {
+
+        String query13="select * " +
+                "from salaries " +
+                "where salaries.emp_no='10102';";
+
+        try {
+            System.out.println("8 row(s) returned");
+            executeEmployeeQuery(query13);
+
+        }catch (SQLException e ){
+            System.out.println("SQL Error: " + e.getMessage() );
+
+        }
+    }
+
+
+
+
     // - Maaş numarası '10102' olan çalışanın maaş artışlarını bul ('to_date' sütununu kullanarak).
     // 12. Find the employee with the highest salary
     // - En yüksek maaşa sahip çalışanı bul.
@@ -182,6 +205,32 @@ public class Queries extends DatabaseHelper {
 
     // 13. Find the latest salaries for each employee
     // - Her çalışanın en son maaşlarını bul.
+
+                @Test
+
+               public void TC13() throws SQLException {
+
+                String query13="select emp_no , salary" +
+                              "from salaries" +
+                              "where to_date='9999-01-01'";
+
+                try {
+                    System.out.println("2000 row(s) returned");
+                    executeEmployeeQuery(query13);
+
+                }catch (SQLException e ){
+                System.out.println("SQL Error: " + e.getMessage() );
+
+    }
+    }
+
+
+
+
+
+
+
+
     // 14. List the first name, last name, and highest salary of employees in the "Sales" department.
     // Order the list by highest salary descending and only show the employee with the highest salary.
     // - "Satış" departmanındaki çalışanların adını, soyadını ve en yüksek maaşını listele.
