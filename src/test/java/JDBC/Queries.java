@@ -362,6 +362,8 @@ public class Queries extends DatabaseHelper {
     // by the peak salary in descending order.
     // - Her departman için, kaydedilmiş en yüksek tek maaşı belirle. Departman adını, çalışanın adını,
     // soyadını ve en yüksek maaş tutarını listele. Sonuçları en yüksek maaşa göre azalan şekilde sırala.
+
+
     // 17. Identify the employees in each department who have the highest average salary. List the
     // department name, employee's first name, last name, and the average salary. Order the results by
     // average salary in descending order, showing only those with the highest average salary within their
@@ -371,6 +373,67 @@ public class Queries extends DatabaseHelper {
     // - Her departmandaki en yüksek ortalama maaşa sahip çalışanları belirle. Departman adını,
     // çalışanın adını, soyadını ve ortalama maaşı listele. Sonuçları departmanlarına göre azalan şekilde
     // sırala, sadece kendi departmanlarında en yüksek ortalama maaşa sahip olanları göster.
+
+    @Test
+    public void TC17() throws SQLException {
+
+        String sorgu = """
+                select 
+                    sonuc.departman_no, 
+                    departments.dept_name as departman_adi, 
+                    sonuc.calisan_no, 
+                    employees.first_name as ad, 
+                    employees.last_name as soyad, 
+                    sonuc.ortalama_maas 
+                from ( 
+                    select 
+                        dept_emp.dept_no as departman_no, 
+                        salaries.emp_no as calisan_no, 
+                        avg(salaries.salary) as ortalama_maas 
+                    from dept_emp 
+                    join salaries on dept_emp.emp_no = salaries.emp_no 
+                    group by dept_emp.dept_no, salaries.emp_no 
+                ) as sonuc 
+                join ( 
+                    select 
+                        departman_no, 
+                        max(ortalama_maas) as en_yuksek_ortalama 
+                    from ( 
+                        select 
+                            dept_emp.dept_no as departman_no, 
+                            salaries.emp_no as calisan_no, 
+                            avg(salaries.salary) as ortalama_maas 
+                        from dept_emp 
+                        join salaries on dept_emp.emp_no = salaries.emp_no 
+                        group by dept_emp.dept_no, salaries.emp_no 
+                    ) as ortalama_tablosu 
+                    group by departman_no 
+                ) as en_yuksek_tablosu 
+                on sonuc.departman_no = en_yuksek_tablosu.departman_no 
+                   and sonuc.ortalama_maas = en_yuksek_tablosu.en_yuksek_ortalama 
+                join employees on sonuc.calisan_no = employees.emp_no 
+                join departments on sonuc.departman_no = departments.dept_no 
+                order by departman_adi desc;
+                """;
+
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery(sorgu);
+
+        System.out.printf("%-20s %-20s %-20s %-16s%n", "Department", "First Name", "Last Name", "Average Salary");
+        System.out.println("------------------------------------------------------------------------");
+
+        while (rs.next()) {
+            String department = rs.getString("departman_adi");
+            String firstName = rs.getString("ad");
+            String lastName = rs.getString("soyad");
+            double avgSalary = rs.getDouble("ortalama_maas");
+            System.out.printf("%-20s %-20s %-20s %-16.2f%n", department, firstName, lastName, avgSalary);
+        }
+    }
+
+
+
+
     // 18. List the names, last names, and hire dates in alphabetical order of all employees hired before
     // January 01, 1990.
     // - 1990-01-01 tarihinden önce işe alınan tüm çalışanların adlarını, soyadlarını ve işe alınma
