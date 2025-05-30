@@ -224,12 +224,7 @@ public class Queries extends DatabaseHelper {
     }
     }
 
-
-
-
-
-
-
+    
 
     // 14. List the first name, last name, and highest salary of employees in the "Sales" department.
     // Order the list by highest salary descending and only show the employee with the highest salary.
