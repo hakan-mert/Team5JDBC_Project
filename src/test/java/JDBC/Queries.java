@@ -265,6 +265,7 @@ public class Queries extends DatabaseHelper {
     }
     // - Her departman için, kaydedilmiş en yüksek tek maaşı belirle. Departman adını, çalışanın adını,
     // soyadını ve en yüksek maaş tutarını listele. Sonuçları en yüksek maaşa göre azalan şekilde sırala.
+
     // 17. Identify the employees in each department who have the highest average salary. List the
     // department name, employee's first name, last name, and the average salary. Order the results by
     // average salary in descending order, showing only those with the highest average salary within their
