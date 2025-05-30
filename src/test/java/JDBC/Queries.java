@@ -241,7 +241,7 @@ public class Queries extends DatabaseHelper {
     // by the peak salary in descending order.
 
     @Test
-    public void TC16(){
+    public void TC16 (){
         String query =
                 "SELECT d.dept_name AS department, e.first_name, e.last_name, s.salary AS max_salary " +
                         "FROM employees e " +
