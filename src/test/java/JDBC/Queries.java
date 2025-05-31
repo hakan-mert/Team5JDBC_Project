@@ -26,6 +26,7 @@ public class Queries extends DatabaseHelper {
             System.out.println();
         }
     }
+
     // 2. List all employees in 'Human Resources' department.
     // - 'İnsan Kaynakları' departmanındaki tüm çalışanları listele.
     @Test(groups = {"EmployeeQueries"})
@@ -84,6 +85,7 @@ public class Queries extends DatabaseHelper {
             System.out.println();
         }
     }
+
     // 5. Calculate the average salary of all employees with gender "F"
     // - "Kadın" cinsiyetindeki tüm çalışanların ortalama maaşını hesapla.
     @Test
@@ -99,6 +101,7 @@ public class Queries extends DatabaseHelper {
             System.out.println();
         }
     }
+
     // 6. List all employees in the "Sales" department with a salary greater than 70,000.
     // - Maaşı 70.000'den yüksek olan "Satış" departmanındaki tüm çalışanları listele
     @Test(groups = {"EmployeeQueries", "SalaryQueries"})
@@ -150,7 +153,6 @@ public class Queries extends DatabaseHelper {
     /// QUERIES 8 and 9
     // 8. Calculate the average salary for each department (by department number or department name)
     // - Her departmanın ortalama maaşını hesapla (departman numarasına veya departman adına göre).
-
     @Test(groups = {"AvgSalaries"})
     public void getDepartmentAverageSalaries() {
 
@@ -200,8 +202,7 @@ public class Queries extends DatabaseHelper {
             System.err.println("SQL Error: " + e.getMessage());
         }
     }
-    ///
-    ///
+
     /// /// ↑↑↑ Over ↑↑↑ ///
 
     // 10. Find all salary changes for employee with emp. no '10102'
@@ -228,7 +229,7 @@ public class Queries extends DatabaseHelper {
 
     public void TC11() throws SQLException {
 
-        String query13="select * " +
+        String query13 = "select * " +
                 "from salaries " +
                 "where salaries.emp_no='10102';";
 
@@ -236,13 +237,11 @@ public class Queries extends DatabaseHelper {
             System.out.println("8 row(s) returned");
             executeEmployeeQuery(query13);
 
-        }catch (SQLException e ){
-            System.out.println("SQL Error: " + e.getMessage() );
+        } catch (SQLException e) {
+            System.out.println("SQL Error: " + e.getMessage());
 
         }
     }
-
-
 
 
     // - Maaş numarası '10102' olan çalışanın maaş artışlarını bul ('to_date' sütununu kullanarak).
@@ -270,60 +269,49 @@ public class Queries extends DatabaseHelper {
     // 13. Find the latest salaries for each employee
     // - Her çalışanın en son maaşlarını bul.
 
-                @Test
+    @Test
+    public void TC13() throws SQLException {
 
-               public void TC13() throws SQLException {
+        String query13 = "select emp_no , salary" +
+                "from salaries" +
+                "where to_date='9999-01-01'";
 
-                String query13="select emp_no , salary" +
-                              "from salaries" +
-                              "where to_date='9999-01-01'";
+        try {
+            System.out.println("2000 row(s) returned");
+            executeEmployeeQuery(query13);
 
-                try {
-                    System.out.println("2000 row(s) returned");
-                    executeEmployeeQuery(query13);
+        } catch (SQLException e) {
+            System.out.println("SQL Error: " + e.getMessage());
 
-                }catch (SQLException e ){
-                System.out.println("SQL Error: " + e.getMessage() );
-
+        }
     }
-    }
 
-    
 
     // 14. List the first name, last name, and highest salary of employees in the "Sales" department.
     // Order the list by highest salary descending and only show the employee with the highest salary.
     // - "Satış" departmanındaki çalışanların adını, soyadını ve en yüksek maaşını listele.
 
     @Test
-    public void TC14()throws SQLException{
-        String query=
-                "select e.first_name, e.last_name, MAX(s.salary) " +
-                        "from employees e"+
+    public void TC14() throws SQLException {
+        String query =
+                "select e.first_name, e.last_name, max(s.salary) " +
+                        "from employees e " +
+                        "join dept_emp de on e.emp_no = de.emp_no " +
+                        "join departments d on de.dept_no = d.dept_no " +
+                        "join salaries s ON e.emp_no = s.emp_no " +
+                        "where d.dept_name = 'Sales' " +
+                        "group by  e.first_name, e.last_name, e.emp_no " +
+                        "order by max(s.salary) desc " +
+                        "limit 1;";
 
-                        "JOIN\n dept_emp de ON e.emp_no = de.emp_no\n"+
-                        "JOIN\n departments d ON de.dept_no = d.dept_no \n"+
-                        "JOIN\n salaries s ON e.emp_no = s.emp_no\n"+
-                        "WHERE\n d.dept_name = 'Sales'\n"+
-                        "GROUP BY e.emp_no"+
-                        "ORDER BY max(s.salary) DESC"+
-                        "LIMIT 1;";
         try {
-            System.out.println("Highest paid employee in Sales:");
-            ArrayList<ArrayList<String>> result = getListData(query);
-
-            for (ArrayList<String> row : result) {
-                System.out.println("Name: " + row.get(0) + " " + row.get(1));
-                System.out.println("Max Salary: " + row.get(2));
-            }
-
-        } catch (Exception e) {
+            System.out.println("Sales departmanında en yüksek maaşı alan çalışan:");
+            executeEmployeeQuery(query);
+        } catch (SQLException e) {
             System.err.println("SQL Error: " + e.getMessage());
         }
-
-
-
-
     }
+
     // Listeyi en yüksek maaşa göre azalan şekilde sırala ve sadece en yüksek maaşa sahip çalışanı
     // göster.
     // 15. Find the Employee with the Highest Salary Average in the Research Department
@@ -341,7 +329,7 @@ public class Queries extends DatabaseHelper {
                         "order by ortalama_maas desc \n" +
                         "limit 1;";
 
-        ArrayList<ArrayList<String>> sonuc =DatabaseHelper.getListData(sorgu);
+        ArrayList<ArrayList<String>> sonuc = DatabaseHelper.getListData(sorgu);
 
         // Başlıklar
         System.out.printf("%-15s %-15s %-20s%n", "Ortalama Maaş", "Ad", "Soyad");
@@ -358,6 +346,29 @@ public class Queries extends DatabaseHelper {
     // - Her departman için, kaydedilmiş en yüksek tek maaşı belirle. Departman adını, çalışanın adını,
     // soyadını ve en yüksek maaş tutarını listele. Sonuçları en yüksek maaşa göre azalan şekilde sırala.
 
+    @Test
+    public void TC16() throws SQLException {
+        String query =
+                "SELECT d.dept_name AS department, e.first_name, e.last_name, s.salary AS max_salary " +
+                        "FROM employees e " +
+                        "JOIN dept_emp de ON e.emp_no = de.emp_no " +
+                        "JOIN departments d ON de.dept_no = d.dept_no " +
+                        "JOIN salaries s ON e.emp_no = s.emp_no " +
+                        "WHERE (d.dept_no, s.salary) IN ( " +
+                        "    SELECT de.dept_no, MAX(s.salary) " +
+                        "    FROM dept_emp de " +
+                        "    JOIN salaries s ON de.emp_no = s.emp_no " +
+                        "    GROUP BY de.dept_no " +
+                        ") " +
+                        "ORDER BY max_salary DESC;";
+
+        try {
+            System.out.println("Her departmandaki en yüksek maaşı alan çalışanlar:");
+            executeEmployeeQuery(query);
+        } catch (SQLException e) {
+            System.err.println("SQL Error: " + e.getMessage());
+        }
+    }
 
     // 17. Identify the employees in each department who have the highest average salary. List the
     // department name, employee's first name, last name, and the average salary. Order the results by
@@ -426,9 +437,6 @@ public class Queries extends DatabaseHelper {
         }
     }
 
-
-
-
     // 18. List the names, last names, and hire dates in alphabetical order of all employees hired before
     // January 01, 1990.
     // - 1990-01-01 tarihinden önce işe alınan tüm çalışanların adlarını, soyadlarını ve işe alınma
@@ -449,6 +457,7 @@ public class Queries extends DatabaseHelper {
             System.err.println("SQL Error: " + e.getMessage());
         }
     }
+
     // 19. List the names, last names, hire dates of all employees hired between January 01, 1985 and
     // December 31, 1989, sorted by hire date.
     // - 1985-01-01 ile 1989-12-31 tarihleri arasında işe alınan tüm çalışanların adlarını, soyadlarını ve işe
