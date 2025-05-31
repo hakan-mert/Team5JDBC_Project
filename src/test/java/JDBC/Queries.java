@@ -272,9 +272,10 @@ public class Queries extends DatabaseHelper {
     @Test
     public void TC13() throws SQLException {
 
-        String query13 = "select emp_no , salary" +
-                "from salaries" +
-                "where to_date='9999-01-01'";
+        String query13 = "select emp_no, salary " +
+                "from salaries " +
+                "where to_date = '9999-01-01'";
+
 
         try {
             System.out.println("2000 row(s) returned");
