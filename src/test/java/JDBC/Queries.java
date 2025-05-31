@@ -2,6 +2,7 @@ package JDBC;
 
 import org.testng.annotations.Test;
 
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +12,20 @@ public class Queries extends DatabaseHelper {
 
     // 1. List all employees in department D001.
     // - D001 departmanındaki tüm çalışanları listele.
+    @Test
+    public void Task1() throws SQLException {
+
+        String query1 = "select * from employees";
+        ArrayList<ArrayList<String>> employees = getListData(query1);
+
+        for (int i = 0; i < employees.size(); i++) {
+
+            for (int j = 0; j < employees.get(i).size(); j++) {
+                System.out.print(employees.get(i).get(j).toString() + " ");
+            }
+            System.out.println();
+        }
+    }
     // 2. List all employees in 'Human Resources' department.
     // - 'İnsan Kaynakları' departmanındaki tüm çalışanları listele.
     @Test(groups = {"EmployeeQueries"})
@@ -47,8 +62,43 @@ public class Queries extends DatabaseHelper {
 
     // 4. Calculate the average salary of all employees with gender "M"
     // - "Erkek" cinsiyetindeki tüm çalışanların ortalama maaşını hesapla.
+    @Test
+    public void Task4() throws SQLException {
+        String sorgu2 = "select count(gender) as toplam_erkek_personel,sum(salary)/count(salary) as ortalama_maas from (select gender as gender, salary as salary from employees left join salaries on employees.emp_no = salaries.emp_no where gender like 'M') as ort";
+
+        ArrayList<ArrayList<String>> line = getListData(sorgu2);
+
+        /* rs null döndürğü için şimdilik yorum olarak bıraktım sonra bakılabilir veya silinebilir
+        ResultSetMetaData rsmd = rs.getMetaData();
+        int columnNumber = rsmd.getColumnCount();
+        System.out.println("kolonSayisi = " + columnNumber);
+        for (int i = 1; i <= columnNumber; i++) {
+            System.out.println(rsmd.getColumnName(i)+" "+ rsmd.getColumnTypeName(i));
+        }
+         */
+
+        for (int i = 0; i < line.size(); i++) {
+            for (int j = 0; j < line.get(i).size(); j++) {
+                System.out.print(line.get(i).get(j).toString() + " ");
+            }
+            System.out.println();
+        }
+    }
     // 5. Calculate the average salary of all employees with gender "F"
     // - "Kadın" cinsiyetindeki tüm çalışanların ortalama maaşını hesapla.
+    @Test
+    public void Task5() throws SQLException {
+        String sorgu2 = "select count(gender) as toplam_kadin_personel,sum(salary)/count(salary) as ortalama_maas from (select gender as gender, salary as salary from employees left join salaries on employees.emp_no = salaries.emp_no where gender like 'F') as ort";
+
+        List<List<String>> line = getListData(sorgu2);
+
+        for (int i = 0; i < line.size(); i++) {
+            for (int j = 0; j < line.get(i).size(); j++) {
+                System.out.print(line.get(i).get(j).toString() + " ");
+            }
+            System.out.println();
+        }
+    }
     // 6. List all employees in the "Sales" department with a salary greater than 70,000.
     // - Maaşı 70.000'den yüksek olan "Satış" departmanındaki tüm çalışanları listele
     @Test(groups = {"EmployeeQueries", "SalaryQueries"})
@@ -156,8 +206,45 @@ public class Queries extends DatabaseHelper {
 
     // 10. Find all salary changes for employee with emp. no '10102'
     // - '10102' iş numarasına sahip çalışanın tüm maaş değişikliklerini bul.
+    @Test
+    public void Task10() throws SQLException {
+
+        String query1 = "select emp_no,salary from salaries where emp_no like '10102'";
+        ArrayList<ArrayList<String>> employee10102 = getListData(query1);
+
+        for (int i = 0; i < employee10102.size(); i++) {
+
+            for (int j = 0; j < employee10102.get(i).size(); j++) {
+                System.out.print(employee10102.get(i).get(j).toString() + " ");
+            }
+            System.out.println();
+        }
+    }
     // 11. Find the salary increases for employee with employee number '10102' (using the to_date column
     // in salaries)
+
+
+    @Test
+
+    public void TC11() throws SQLException {
+
+        String query13="select * " +
+                "from salaries " +
+                "where salaries.emp_no='10102';";
+
+        try {
+            System.out.println("8 row(s) returned");
+            executeEmployeeQuery(query13);
+
+        }catch (SQLException e ){
+            System.out.println("SQL Error: " + e.getMessage() );
+
+        }
+    }
+
+
+
+
     // - Maaş numarası '10102' olan çalışanın maaş artışlarını bul ('to_date' sütununu kullanarak).
     // 12. Find the employee with the highest salary
     // - En yüksek maaşa sahip çalışanı bul.
@@ -276,6 +363,67 @@ public class Queries extends DatabaseHelper {
     // - Her departmandaki en yüksek ortalama maaşa sahip çalışanları belirle. Departman adını,
     // çalışanın adını, soyadını ve ortalama maaşı listele. Sonuçları departmanlarına göre azalan şekilde
     // sırala, sadece kendi departmanlarında en yüksek ortalama maaşa sahip olanları göster.
+
+    @Test
+    public void TC17() throws SQLException {
+
+        String sorgu = """
+                select 
+                    sonuc.departman_no, 
+                    departments.dept_name as departman_adi, 
+                    sonuc.calisan_no, 
+                    employees.first_name as ad, 
+                    employees.last_name as soyad, 
+                    sonuc.ortalama_maas 
+                from ( 
+                    select 
+                        dept_emp.dept_no as departman_no, 
+                        salaries.emp_no as calisan_no, 
+                        avg(salaries.salary) as ortalama_maas 
+                    from dept_emp 
+                    join salaries on dept_emp.emp_no = salaries.emp_no 
+                    group by dept_emp.dept_no, salaries.emp_no 
+                ) as sonuc 
+                join ( 
+                    select 
+                        departman_no, 
+                        max(ortalama_maas) as en_yuksek_ortalama 
+                    from ( 
+                        select 
+                            dept_emp.dept_no as departman_no, 
+                            salaries.emp_no as calisan_no, 
+                            avg(salaries.salary) as ortalama_maas 
+                        from dept_emp 
+                        join salaries on dept_emp.emp_no = salaries.emp_no 
+                        group by dept_emp.dept_no, salaries.emp_no 
+                    ) as ortalama_tablosu 
+                    group by departman_no 
+                ) as en_yuksek_tablosu 
+                on sonuc.departman_no = en_yuksek_tablosu.departman_no 
+                   and sonuc.ortalama_maas = en_yuksek_tablosu.en_yuksek_ortalama 
+                join employees on sonuc.calisan_no = employees.emp_no 
+                join departments on sonuc.departman_no = departments.dept_no 
+                order by departman_adi desc;
+                """;
+
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery(sorgu);
+
+        System.out.printf("%-20s %-20s %-20s %-16s%n", "Department", "First Name", "Last Name", "Average Salary");
+        System.out.println("------------------------------------------------------------------------");
+
+        while (rs.next()) {
+            String department = rs.getString("departman_adi");
+            String firstName = rs.getString("ad");
+            String lastName = rs.getString("soyad");
+            double avgSalary = rs.getDouble("ortalama_maas");
+            System.out.printf("%-20s %-20s %-20s %-16.2f%n", department, firstName, lastName, avgSalary);
+        }
+    }
+
+
+
+
     // 18. List the names, last names, and hire dates in alphabetical order of all employees hired before
     // January 01, 1990.
     // - 1990-01-01 tarihinden önce işe alınan tüm çalışanların adlarını, soyadlarını ve işe alınma
