@@ -270,57 +270,28 @@ public class Queries extends DatabaseHelper {
     // 13. Find the latest salaries for each employee
     // - Her çalışanın en son maaşlarını bul.
 
-                @Test
-
-               public void TC13() throws SQLException {
-
-                String query13="select emp_no , salary" +
-                              "from salaries" +
-                              "where to_date='9999-01-01'";
-
-                try {
-                    System.out.println("2000 row(s) returned");
-                    executeEmployeeQuery(query13);
-
-                }catch (SQLException e ){
-                System.out.println("SQL Error: " + e.getMessage() );
-
-    }
-    }
-
-    
-
     // 14. List the first name, last name, and highest salary of employees in the "Sales" department.
     // Order the list by highest salary descending and only show the employee with the highest salary.
     // - "Satış" departmanındaki çalışanların adını, soyadını ve en yüksek maaşını listele.
 
     @Test
     public void TC14()throws SQLException{
-        String query=
-                "select e.first_name, e.last_name, MAX(s.salary) " +
-                        "from employees e"+
-
-                        "JOIN\n dept_emp de ON e.emp_no = de.emp_no\n"+
-                        "JOIN\n departments d ON de.dept_no = d.dept_no \n"+
-                        "JOIN\n salaries s ON e.emp_no = s.emp_no\n"+
-                        "WHERE\n d.dept_name = 'Sales'\n"+
-                        "GROUP BY e.emp_no"+
-                        "ORDER BY max(s.salary) DESC"+
+        String query =
+                "SELECT e.first_name, e.last_name, MAX(s.salary) AS highest_salary " +
+                        "FROM employees e " +
+                        "JOIN dept_emp de ON e.emp_no = de.emp_no " +
+                        "JOIN departments d ON de.dept_no = d.dept_no " +
+                        "JOIN salaries s ON e.emp_no = s.emp_no " +
+                        "WHERE d.dept_name = 'Sales' " +
+                        "GROUP BY e.first_name, e.last_name " +
+                        "ORDER BY highest_salary DESC " +
                         "LIMIT 1;";
         try {
-            System.out.println("Highest paid employee in Sales:");
-            ArrayList<ArrayList<String>> result = getListData(query);
-
-            for (ArrayList<String> row : result) {
-                System.out.println("Name: " + row.get(0) + " " + row.get(1));
-                System.out.println("Max Salary: " + row.get(2));
-            }
-
-        } catch (Exception e) {
+            System.out.println("The employee with the highest salary in the sales department:");
+            executeEmployeeQuery(query);
+        } catch (SQLException e) {
             System.err.println("SQL Error: " + e.getMessage());
         }
-
-
 
 
     }
@@ -355,9 +326,33 @@ public class Queries extends DatabaseHelper {
     // 16. For each department, identify the employee with the highest single salary ever recorded. List the
     // department name, employee's first name, last name, and the peak salary amount. Order the results
     // by the peak salary in descending order.
+
+    @Test
+    public void TC16(){
+        String query =
+                "SELECT d.dept_name AS department, e.first_name, e.last_name, s.salary AS max_salary " +
+                        "FROM employees e " +
+                        "JOIN dept_emp de ON e.emp_no = de.emp_no " +
+                        "JOIN departments d ON de.dept_no = d.dept_no " +
+                        "JOIN salaries s ON e.emp_no = s.emp_no " +
+                        "WHERE (d.dept_no, s.salary) IN ( " +
+                        "    SELECT de.dept_no, MAX(s.salary) " +
+                        "    FROM dept_emp de " +
+                        "    JOIN salaries s ON de.emp_no = s.emp_no " +
+                        "    GROUP BY de.dept_no " +
+                        ") " +
+                        "ORDER BY max_salary DESC;";
+
+        try {
+            System.out.println("The employees with the highest salary in each department:");
+            executeEmployeeQuery(query);
+        } catch (SQLException e) {
+            System.err.println("SQL Error: " + e.getMessage());
+        }
+
+    }
     // - Her departman için, kaydedilmiş en yüksek tek maaşı belirle. Departman adını, çalışanın adını,
     // soyadını ve en yüksek maaş tutarını listele. Sonuçları en yüksek maaşa göre azalan şekilde sırala.
-
 
     // 17. Identify the employees in each department who have the highest average salary. List the
     // department name, employee's first name, last name, and the average salary. Order the results by
