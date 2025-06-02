@@ -90,7 +90,7 @@ public class Queries extends DatabaseHelper {
     public void Task5() throws SQLException {
         String sorgu2 = "select count(gender) as toplam_kadin_personel,sum(salary)/count(salary) as ortalama_maas from (select gender as gender, salary as salary from employees left join salaries on employees.emp_no = salaries.emp_no where gender like 'F') as ort";
 
-        List<List<String>> line = getListData(sorgu2);
+        ArrayList<ArrayList<String>> line = getListData(sorgu2);
 
         for (int i = 0; i < line.size(); i++) {
             for (int j = 0; j < line.get(i).size(); j++) {
